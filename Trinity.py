@@ -189,13 +189,12 @@ class StackingTrinity(Trinity):
         return correct / nr_records
 
 class TrinityClassifier(Trinity):
-    def __init__(self):
-        super().__init__(self.n_features)
+    def __init__(self, n_features):
+        super().__init__(n_features)
+        self.n_features = n_features
         self.train_set_trinity = []
-        self.n_features = None
 
     def train(self, X, y):
-        self.n_features = X.shape[1]
         training_trinity = np.array([[np.array([val]) for val in row] for row in X.values])
         y_trinity = pd.get_dummies(y, dtype=int).to_numpy()
         super().train(training_trinity, y_trinity)
