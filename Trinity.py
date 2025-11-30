@@ -189,10 +189,10 @@ class StackingTrinity(Trinity):
         return correct / nr_records
 
 class TrinityClassifier(Trinity):
-    def __init__(self, n_features=None):
+    def __init__(self):
         super().__init__(self.n_features)
         self.train_set_trinity = []
-        self.n_features = n_features
+        self.n_features = None
 
     def train(self, X, y):
         self.n_features = X.shape[1]
