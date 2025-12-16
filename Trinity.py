@@ -91,7 +91,6 @@ class Trinity:
         self.input_layer.backward(error_to_input_layer, self.learning_rate)
 
     def update_with_momentum(self, error):
-        # 1. Run backward passes (your original layers unchanged)
         error_to_mid = self.output_layer.backward(error, self.learning_rate)
         error_to_input = self.mid_layer.backward(error_to_mid, self.learning_rate)
         self.input_layer.backward(error_to_input, self.learning_rate)  # Runs but gradients not applied yet
@@ -109,7 +108,7 @@ class Trinity:
         self.input_layer.weights += self.v_input_w
         self.input_layer.bias += self.v_input_b
 
-        # MID LAYER (repeat exact pattern)
+        # MID LAYER
         del_Z_mid = error_to_mid * self.mid_layer.sigmoid_derivative(self.mid_layer.arr_Z)
         dW_mid = np.dot(self.mid_layer.input, del_Z_mid.transpose())
         dB_mid = np.sum(del_Z_mid, axis=1, keepdims=True)
@@ -121,8 +120,8 @@ class Trinity:
         self.mid_layer.weights += self.v_mid_w
         self.mid_layer.bias += self.v_mid_b
 
-        # OUTPUT LAYER (repeat exact pattern - adjust for SoftMAX derivative)
-        del_Z_out = error * self.output_layer.softmax_derivative(self.output_layer.arr_Z)  # Use your SoftMAX deriv
+        # OUTPUT LAYER
+        del_Z_out = error * self.output_layer.softmax_derivative(self.output_layer.arr_Z)
         dW_out = np.dot(self.output_layer.input, del_Z_out.transpose())
         dB_out = np.sum(del_Z_out, axis=1, keepdims=True)
         if self.v_out_w is None:
@@ -167,7 +166,6 @@ class Trinity:
         """
         results = self.forward_pass(vector)
 
-        # Get the class with highest probability
         max_value = np.max(results)
 
         if results[0] == max_value:
